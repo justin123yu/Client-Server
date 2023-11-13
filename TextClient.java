@@ -16,7 +16,6 @@ class TextClient {
          BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
          try{
             option = Integer.parseInt(inFromUser.readLine());
-
                   Socket clientSocket = new Socket("127.0.0.1", 6789);
                   DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                   outToServer.writeBytes(option+ "\r\n");
@@ -28,11 +27,17 @@ class TextClient {
                   System.out.println("Please Enter username and password");
                   String account = inFromUser.readLine();
                   outToServer.writeBytes(account + "\r\n");
-                  message = outToServer
+                  message = inFromServer.readLine();
                   System.out.println("From Server: " + message);
                }
-                  break;
+               break;
                case 1:
+                  BufferedReader inFromServer = new BufferedReader(new InputStreamReader( clientSocket.getInputStream()));
+                  message = inFromServer.readLine();
+                  while(!message.equals("")){
+                     System.out.println(message);
+                     message = inFromServer.readLine();
+                  }
                   break;
                case 2:
                   break;

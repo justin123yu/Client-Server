@@ -26,31 +26,35 @@ class TextServer {
          int option = Integer.parseInt(options);
          switch (option) {
             case 0:
-            response = inFromClient.readLine();
-            String[] account = response.split(" ");
-            if(accounts.containsKey(account[0])){
-               if(accounts.get(account[0]).equals(account[1])){
-                  outToClient.writeBytes("Access Granted" + "\r\n");
+            while(!response.equals("Access Granted")){
+               response = inFromClient.readLine();
+               String[] account = response.split(" ");
+               if(accounts.containsKey(account[0])){
+                  if(accounts.get(account[0]).equals(account[1])){
+                     outToClient.writeBytes("Access Granted" + "\r\n");
+                  } else {
+                     outToClient.writeBytes("Access Denied – Username/Password Incorrect" + "\r\n");
+                  }
                } else {
-                  outToClient.writeBytes("Access Denied" + "\r\n");
+                  outToClient.writeBytes("Access Denied – Username/Password Incorrect" + "\r\n");
                }
-            } else {
-               outToClient.writeBytes("Access Denied" + "\r\n");
+
             }
             break;
             case 1:
                int i = 1;
+               outToClient.writeBytes("User List: " + "\r\n");
                for(String key : accounts.keySet()){
-                  response += "User "+ i +" "+ key + "\n";
+                  response = "User "+ i +" "+ key;
+                  outToClient.writeBytes(response + "\n");
+                  System.out.println(response);
                   i++;
                }
-               outToClient.writeBytes(response + "\r\n");
+               outToClient.writeBytes("\r\n");
+               break;
             default:
                break;
          }
-
-         // capitalizedSentence = clientSentence.toUpperCase() + '\n'; 
-         // outToClient.writeBytes(capitalizedSentence);
       } 
    }
 }
