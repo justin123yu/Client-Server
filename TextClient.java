@@ -20,10 +20,10 @@ class TextClient {
                   DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                   outToServer.writeBytes(option+ "\r\n");
                   String message = "";
+                  BufferedReader inFromServer = new BufferedReader(new InputStreamReader( clientSocket.getInputStream()));
             switch(option){
                case 0:
                while(!message.equals("Access Granted")){
-                  BufferedReader inFromServer = new BufferedReader(new InputStreamReader( clientSocket.getInputStream()));
                   System.out.println("Please Enter username and password");
                   String account = inFromUser.readLine();
                   outToServer.writeBytes(account + "\r\n");
@@ -32,16 +32,26 @@ class TextClient {
                }
                break;
                case 1:
-                  BufferedReader inFromServer = new BufferedReader(new InputStreamReader( clientSocket.getInputStream()));
-                  message = inFromServer.readLine();
-                  while(!message.equals("")){
+                  while(!(message = inFromServer.readLine()).equals("")){
                      System.out.println(message);
-                     message = inFromServer.readLine();
                   }
                   break;
                case 2:
+                  System.out.println("Please Enter the recipient");
+                  String recipient = inFromUser.readLine();
+                  outToServer.writeBytes(recipient + "\r\n");
+                  System.out.println("Please Enter the message");
+                  String msg = inFromUser.readLine();
+                  outToServer.writeBytes(msg + "\r\n");
+                  System.out.println(inFromServer.readLine());
                   break;
                case 3:
+                  System.out.println("Please Enter your name.");
+                  String name = inFromUser.readLine();
+                  outToServer.writeBytes(name + "\r\n");
+                  while(!(message = inFromServer.readLine()).equals("")){
+                     System.out.println(message);
+                  }
                   break;
                case 4:
                   break;

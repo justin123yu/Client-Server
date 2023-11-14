@@ -26,21 +26,23 @@ class TextServer {
          int option = Integer.parseInt(options);
          switch (option) {
             case 0:
-            while(!response.equals("Access Granted")){
-               response = inFromClient.readLine();
-               String[] account = response.split(" ");
-               if(accounts.containsKey(account[0])){
-                  if(accounts.get(account[0]).equals(account[1])){
-                     outToClient.writeBytes("Access Granted" + "\r\n");
+               while(!response.equals("Access Granted")){
+                  response = inFromClient.readLine();
+                  String[] account = response.split(" ");
+                  System.out.println("Account: " +response);
+                  if(account.length == 2 && accounts.containsKey(account[0])){
+                     if(accounts.get(account[0]).equals(account[1])){
+                        outToClient.writeBytes("Access Granted" + "\r\n");
+                        break;
+                     } else {
+                        outToClient.writeBytes("Access Denied – Username/Password Incorrect" + "\r\n");
+                     }
                   } else {
                      outToClient.writeBytes("Access Denied – Username/Password Incorrect" + "\r\n");
                   }
-               } else {
-                  outToClient.writeBytes("Access Denied – Username/Password Incorrect" + "\r\n");
-               }
 
-            }
-            break;
+               }
+               break;
             case 1:
                int i = 1;
                outToClient.writeBytes("User List: " + "\r\n");
@@ -51,6 +53,35 @@ class TextServer {
                   i++;
                }
                outToClient.writeBytes("\r\n");
+               break;
+            case 2:
+               String user = inFromClient.readLine();
+               if(accounts.containsKey(user)){
+                  String msg = inFromClient.readLine();
+                  System.out.println("User: " + user + " Message: " + msg);
+                  message.get(user).add(msg);
+                  outToClient.writeBytes("Message Sent" + "\r\n");
+                  System.out.println("Message Sent");
+               } else {
+                  outToClient.writeBytes("User does not exist" + "\r\n");
+                  System.out.println("User does not exist");
+               }
+               break;
+            case 3:
+               String name = inFromClient.readLine();
+               System.out.println("User: " + name);
+               if(accounts.containsKey(name)){
+                  List<String> msgs = message.get(name);
+                  for(String m : msgs){
+                     outToClient.writeBytes(m + "\r\n");
+                     System.out.println(m);
+                  }
+                  outToClient.writeBytes("\r\n");
+                  message.get(name).clear();
+               } else {
+                  outToClient.writeBytes("User does not exist" + "\r\n");
+                  System.out.println("User does not exist");
+               }
                break;
             default:
                break;
