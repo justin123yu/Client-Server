@@ -7,11 +7,13 @@ class TextClient {
       int option = -1;
       while(option != 4){
          System.out.println(
+               "============\n"+
                "0. Connect to the server\n" +
                "1. Get the user list\n" + 
                "2. Send a message\n" + 
                "3. Get my messages\n" + 
-               "4. Exit"
+               "4. Exit\n"+
+               "Please enter a choice: "
                );
          BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
          try{
@@ -23,24 +25,30 @@ class TextClient {
                   BufferedReader inFromServer = new BufferedReader(new InputStreamReader( clientSocket.getInputStream()));
             switch(option){
                case 0:
+               System.out.println("Connecting...");
                while(!message.equals("Access Granted")){
-                  System.out.println("Please Enter username and password");
+                  System.out.print("Please enter the username: ");
                   String account = inFromUser.readLine();
+                  outToServer.writeBytes(account + "\r\n");
+                  System.out.print("Please enter the password: ");
+                  account = inFromUser.readLine();
                   outToServer.writeBytes(account + "\r\n");
                   message = inFromServer.readLine();
                   System.out.println("From Server: " + message);
                }
                break;
                case 1:
+                  System.out.println("Getting list of users...");
+                  System.out.println("========================");
                   while(!(message = inFromServer.readLine()).equals("")){
                      System.out.println(message);
                   }
                   break;
                case 2:
-                  System.out.println("Please Enter the recipient");
+                  System.out.print("Enter a username you want to send a message to: ");
                   String recipient = inFromUser.readLine();
                   outToServer.writeBytes(recipient + "\r\n");
-                  System.out.println("Please Enter the message");
+                  System.out.print("Enter the message you want to send: ");
                   String msg = inFromUser.readLine();
                   outToServer.writeBytes(msg + "\r\n");
                   System.out.println(inFromServer.readLine());

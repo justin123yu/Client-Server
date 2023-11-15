@@ -22,30 +22,35 @@ class TextServer {
          BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream())); 
          DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
          options = inFromClient.readLine(); 
-         System.out.println("FROM CLIENT: " + options);
+         System.out.print("User's Choice is: " + options);
          int option = Integer.parseInt(options);
          switch (option) {
             case 0:
                while(!response.equals("Access Granted")){
+                  String[] account = new String[2];
                   response = inFromClient.readLine();
-                  String[] account = response.split(" ");
-                  System.out.println("Account: " +response);
-                  if(account.length == 2 && accounts.containsKey(account[0])){
+                  account[0] = response;
+                  response = inFromClient.readLine();
+                  account[1] = response;
+                  System.out.println("username: " +account[0] + " password: " + account[1]);
+                  if(accounts.containsKey(account[0])){
                      if(accounts.get(account[0]).equals(account[1])){
                         outToClient.writeBytes("Access Granted" + "\r\n");
+                        System.out.println("Access Granted");
                         break;
                      } else {
                         outToClient.writeBytes("Access Denied – Username/Password Incorrect" + "\r\n");
+                        System.out.println("Access Denied");
                      }
                   } else {
                      outToClient.writeBytes("Access Denied – Username/Password Incorrect" + "\r\n");
+                     System.out.println("Access Denied");
                   }
 
                }
                break;
             case 1:
                int i = 1;
-               outToClient.writeBytes("User List: " + "\r\n");
                for(String key : accounts.keySet()){
                   response = "User "+ i +" "+ key;
                   outToClient.writeBytes(response + "\n");
@@ -60,8 +65,8 @@ class TextServer {
                   String msg = inFromClient.readLine();
                   System.out.println("User: " + user + " Message: " + msg);
                   message.get(user).add(msg);
-                  outToClient.writeBytes("Message Sent" + "\r\n");
-                  System.out.println("Message Sent");
+                  outToClient.writeBytes("Status: Message sent successful" + "\r\n");
+                  System.out.println("Recieve a message for "+ user);
                } else {
                   outToClient.writeBytes("User does not exist" + "\r\n");
                   System.out.println("User does not exist");
