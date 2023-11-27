@@ -44,8 +44,8 @@ class TextClient {
                   account = inFromUser.readLine();
                   outToServer.writeBytes(account + "\r\n");
                   message = inFromServer.readLine();
-                  System.out.println(message);
                   System.out.println("");
+                  System.out.println(message);
                }
                   access = true;
                break;
@@ -68,10 +68,7 @@ class TextClient {
                case 3:
                   System.out.println("Here are your messages: ");
                   System.out.println("========================");
-                  message = inFromServer.readLine();
-                  System.out.println(message);
-                  while(clientSocket.getInputStream().available() > 0){
-                     message = inFromServer.readLine();
+                  while((message = inFromServer.readLine()) != null){
                      System.out.println(message);
                   }
                   break;
@@ -82,13 +79,6 @@ class TextClient {
             System.out.println("Invalid input Please Enter an number");
          }
       }
-      
-      // String sentence;
-      // String modifiedSentence;
-      // sentence = inFromUser.readLine(); 
-      // outToServer.writeBytes(sentence + '\n'); 
-      // modifiedSentence = inFromServer.readLine(); 
-      // System.out.println("FROM SERVER: " + modifiedSentence);
-      // clientSocket.close();
+
    } 
 }

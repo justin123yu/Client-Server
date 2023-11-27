@@ -52,13 +52,11 @@ class TextServer {
                }
                break;
             case 1:
-               int i = 1;
                System.out.println("Returning list of users...");
                for(String key : accounts.keySet()){
-                  response = "User "+ i +" "+ key;
+                  response = key;
                   outToClient.writeBytes(response + "\n");
                   System.out.print(response + "\n");
-                  i++;
                }
                outToClient.writeBytes("\r\n");
                break;
@@ -79,15 +77,14 @@ class TextServer {
                   List<String> msgs = message.get(user);
                   if(msgs.size() == 0){
                      System.out.println("No messages");
-                     outToClient.writeBytes("No messages" + "\r\n");
-                     outToClient.flush();
+                     outToClient.writeBytes("No messages" + "\n");
                   } else {
                      for(String m : msgs){
-                        outToClient.writeBytes(m + "\r\n");
-                        outToClient.flush();
+                        outToClient.writeBytes(m + "\n");
                         System.out.println(m);
                      }
                   }
+                  outToClient.close();
                break;
             case 4:
                System.out.println(user +" Logged Out");
